@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>X O GAME</title>
+
+    <style>
+        .ox{
+            border: 2px solid rgb(0, 208, 255);
+             text-align: center;
+             font-size: 30px;
+                font-family: Arial, sans-serif;
+                background-color: rgb(0, 255, 225);
+        }
+
+        body {
+           
+            margin: 30px;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: bisque;
+        }
+
+        /* Turn text */
+        #turn {
+            font-size: 25px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        /* 3 x 3 Game */
+        .game {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+
+            width: 300px;
+            margin: auto;
+        }
+
+        .box {
+            border: 2px solid black;
+
+            height: 100px;
+            width: 100px;
+
+            font-size: 50px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            box-sizing: border-box;
+
+            cursor: pointer;
+
+            text-shadow: 2px 2px 4px #000000;
+        }
+
+        /* Result */
+        #result {
+            font-size: 28px;
+            font-weight: bold;
+
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* Restart button */
+        button {
+            padding: 10px 25px;
+            font-size: 18px;
+
+            cursor: pointer;
+        }
+        .Restart{
+            border-radius: 40px;
+              background-color: rgb(0, 255, 225);
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="ox">  XO GAME</div>
+    <br>
+
+    <!-- Turn -->
+    <div id="turn">X Turn</div>
+
+
+    <!-- Game Box -->
+    <div class="game">
+
+        <div class="box" id="box1" onclick="BoxClick(0)"></div>
+        <div class="box" id="box2" onclick="BoxClick(1)"></div>
+        <div class="box" id="box3" onclick="BoxClick(2)"></div>
+
+        <div class="box" id="box4" onclick="BoxClick(3)"></div>
+        <div class="box" id="box5" onclick="BoxClick(4)"></div>
+        <div class="box" id="box6" onclick="BoxClick(5)"></div>
+
+        <div class="box" id="box7" onclick="BoxClick(6)"></div>
+        <div class="box" id="box8" onclick="BoxClick(7)"></div>
+        <div class="box" id="box9" onclick="BoxClick(8)"></div>
+
+    </div>
+
+
+    <!-- Result -->
+    <div id="result"></div>
+
+
+    <!-- Restart -->
+    <button class="Restart" onclick="Restart()">Restart</button>
+
+
+    <script>
+
+        let boxes = document.querySelectorAll(".box");
+
+        let turn = "X";
+
+        let gameOver = false;
+
+        let board = ["", "", "", "", "", "", "", ""];
+
+
+        function BoxClick(index) {
+
+            // Game over என்றால் click work ஆகாது
+            if (gameOver) {
+                return;
+            }
+
+
+            // Already box fill ஆகி இருந்தால் return
+            if (board[index] !== "") {
+                return;
+            }
+
+
+            // Current player value store
+            board[index] = turn;
+
+            boxes[index].innerHTML = turn;
+
+
+            // X green
+            if (turn === "X") {
+                boxes[index].style.color = "green";
+            }
+
+            // Y orange
+            else {
+                boxes[index].style.color = "orange";
+            }
+
+
+            // Winner check
+            CheckWinner();
+
+
+            // Winner இல்லையென்றால் turn change
+            if (!gameOver) {
+
+                if (turn === "X") {
+                    turn = "O";
+                }
+
+                else {
+                    turn = "X";
+                }
+
+
+                // Turn மேல display
+                document.getElementById("turn").innerHTML = turn + " Turn";
+            }
+
+        }
+
+
+        function CheckWinner() {
+
+            let winningPatterns = [
+
+                [0, 1, 2],
+                [3, 4, 5],
+                [6, 7, 8],
+
+                [0, 3, 6],
+                [1, 4, 7],
+                [2, 5, 8],
+
+                [0, 4, 8],
+                [2, 4, 6]
+
+            ];
+
+
+            for (let pattern of winningPatterns) {
+
+                let a = pattern[0];
+                let b = pattern[1];
+                let c = pattern[2];
+
+
+                if (
+                    board[a] !== "" &&
+                    board[a] === board[b] &&
+                    board[b] === board[c]
+                ) {
+
+                    document.getElementById("result").innerHTML =
+                        turn + " Win";
+
+                    gameOver = true;
+
+                    return;
+                }
+
+            }
+
+
+            // Draw check
+            if (!board.includes("")) {
+
+                document.getElementById("result").innerHTML =
+                    "Draw";
+
+                gameOver = true;
+
+                return;
+            }
+
+        }
+
+
+        function Restart() {
+
+            // Board empty
+            board = ["", "", "", "", "", "", "", ""];
+
+
+            // Turn X
+            turn = "X";
+
+
+            // Game start
+            gameOver = false;
+
+
+            // All boxes empty
+            for (let box of boxes) {
+
+                box.innerHTML = "";
+
+                box.style.color = "black";
+            }
+
+
+            // Turn reset
+            document.getElementById("turn").innerHTML =
+                "X Turn";
+
+
+            // Result clear
+            document.getElementById("result").innerHTML = "";
+
+        }
+
+    </script>
+
+</body>
+
+</html>
